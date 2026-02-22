@@ -62,7 +62,7 @@ export default function VoteScreen() {
                 showsVerticalScrollIndicator={false}
             />
 
-            {/* Voting Confirmation Sheet (Custom Modal for Web/Native) */}
+            {/* Voting Confirmation */}
             <Modal
                 visible={isSheetVisible}
                 transparent={true}

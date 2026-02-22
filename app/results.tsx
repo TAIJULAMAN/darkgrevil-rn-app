@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Animated, Pressable } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Animated, Pressable, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ChevronLeft } from 'lucide-react-native';
 import { Colors, Spacing, Typography } from '../constants/Theme';
 import { CHARACTERS, ADVENTURES } from '../constants/MockData';
 import LeaderboardItem from '../components/LeaderboardItem';
 import { useRouter } from 'expo-router';
-import { BlurView } from 'expo-blur';
 
 export default function ResultsScreen() {
     const [selectedAdventure, setSelectedAdventure] = useState<string | null>(null);
@@ -97,14 +96,20 @@ export default function ResultsScreen() {
             {showPopup && (
                 <Animated.View style={[styles.popupOverlay, { opacity: fadeAnim }]}>
                     <Pressable style={styles.popupPressable} onPress={closePopup}>
-                        <BlurView intensity={20} tint="dark" style={styles.popupBlur}>
-                            <View style={styles.popupContent}>
-                                <Text style={styles.popupTitle}>Thanks for voting!</Text>
-                                <Text style={styles.popupDescription}>
-                                    Your choice has been recorded.
-                                </Text>
-                            </View>
-                        </BlurView>
+                        <View style={styles.popupContainer}>
+                            <Image
+                                source={require('../assets/check.png')}
+                                style={styles.checkIcon}
+                                resizeMode="contain"
+                            />
+                            <Text style={styles.popupTitle}>Thanks for voting!</Text>
+                            <Text style={styles.popupDescription}>
+                                You can now enjoy our games and pop quiz challenges to discover fun facts and clues.
+                            </Text>
+                            <TouchableOpacity onPress={() => { setShowPopup(false); router.push('/watch'); }}>
+                                <Text style={styles.popupFooter}>— Enjoy!</Text>
+                            </TouchableOpacity>
+                        </View>
                     </Pressable>
                 </Animated.View>
             )}
@@ -222,31 +227,67 @@ const styles = StyleSheet.create({
     },
     popupOverlay: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        backgroundColor: 'rgba(0, 0, 0, 0.85)',
         justifyContent: 'center',
         alignItems: 'center',
-        zIndex: 100,
+        zIndex: 1000,
     },
     popupPressable: {
         width: '85%',
     },
-    popupBlur: {
-        borderRadius: 32,
+    popupContainer: {
+        backgroundColor: '#241B35',
+        borderRadius: 48,
         padding: 40,
         alignItems: 'center',
     },
-    popupContent: {
+    successIconOuter: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        backgroundColor: 'rgba(168, 85, 247, 0.2)',
+        justifyContent: 'center',
         alignItems: 'center',
+        marginBottom: 24,
+    },
+    successIconInner: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        borderWidth: 2,
+        borderColor: Colors.primary,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    successIconCircle: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        backgroundColor: '#1A1126',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    checkIcon: {
+        width: 100,
+        height: 100,
     },
     popupTitle: {
         color: '#FFF',
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: 'bold',
-        marginBottom: 8,
+        marginBottom: 16,
+        textAlign: 'center',
     },
     popupDescription: {
         color: 'rgba(255, 255, 255, 0.6)',
         fontSize: 16,
         textAlign: 'center',
+        lineHeight: 24,
+        marginBottom: 12,
+    },
+    popupFooter: {
+        color: '#FFF',
+        fontSize: 16,
+        fontWeight: '500',
     },
 });

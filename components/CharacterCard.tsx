@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(255,255,255,0.05)',
     },
     selectedContainer: {
-        backgroundColor: 'rgba(57, 45, 75, 0.8)', // Dark purple background for selection
+        backgroundColor: 'rgba(57, 45, 75, 0.8)',
         borderColor: '#A855F7',
     },
     imageContainer: {
@@ -64,14 +64,14 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         right: -5,
-        backgroundColor: '#8B5CF6', // Brighter purple for the check circle
+        backgroundColor: '#8B5CF6',
         borderRadius: 12,
         width: 24,
         height: 24,
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 2,
-        borderColor: '#1A1A1A', // Dark border to separate from background
+        borderColor: '#1A1A1A',
         zIndex: 10,
     },
     name: {

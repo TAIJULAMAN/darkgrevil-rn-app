@@ -12,8 +12,6 @@ interface LeaderboardItemProps {
 
 export default function LeaderboardItem({ rank, name, image, votes }: LeaderboardItemProps) {
     const isTop = rank === 1;
-
-    // Robust image source handling
     const imageSource = typeof image === 'string' ? { uri: image } : image;
 
     return (
@@ -45,7 +43,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#241B35', // Deep purple from the image
+        backgroundColor: '#241B35',
         borderRadius: 50,
         paddingVertical: 10,
         paddingHorizontal: 24,

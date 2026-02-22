@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontSize: 42,
         fontWeight: 'bold',
-        fontFamily: 'System', // Closest to the bold sans-serif in image
+        fontFamily: 'System',
         letterSpacing: -0.5,
     },
 });

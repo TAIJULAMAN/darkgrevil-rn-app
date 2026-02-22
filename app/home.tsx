@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BarChart2 } from 'lucide-react-native';
-import { Colors, Spacing, Typography } from '../constants/Theme';
+import { Colors, Spacing } from '../constants/Theme';
 import { CHARACTERS } from '../constants/MockData';
 import { useRouter } from 'expo-router';
 
@@ -44,7 +44,7 @@ export default function HomeScreen() {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-                {/* Profile Header */}
+                {/* Profile */}
                 <View style={styles.header}>
                     <Image
                         source={require('../assets/avatar.png')}
@@ -56,7 +56,7 @@ export default function HomeScreen() {
                     </View>
                 </View>
 
-                {/* Character Grid */}
+                {/* Characters */}
                 <View style={styles.gridContainer}>
                     {CHARACTERS.map((char) => (
                         <View key={char.id} style={styles.gridItem}>
@@ -66,7 +66,7 @@ export default function HomeScreen() {
                 </View>
             </ScrollView>
 
-            {/* Footer Actions */}
+            {/* Footer */}
             <View style={styles.footer}>
                 <TouchableOpacity
                     style={[styles.voteButton, !selectedId && styles.disabledVoteButton]}

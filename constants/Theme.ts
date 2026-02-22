@@ -4,7 +4,7 @@ export const Colors = {
   background: '#000000',
   surface: '#121212',
   surfaceLight: '#1E1E1E',
-  primary: '#A855F7', // Bright purple
+  primary: '#A855F7',
   primaryDeep: '#7E22CE',
   text: '#FFFFFF',
   textSecondary: '#A1A1AA',
@@ -30,9 +30,9 @@ export const Typography: { [key: string]: TextStyle } = {
     color: Colors.text,
   },
   h2: {
-    fontSize: 24, // Updated per user spec
-    fontWeight: '400', // Updated per user spec (Regular)
-    lineHeight: 32, // Updated per user spec
+    fontSize: 24,
+    fontWeight: '400',
+    lineHeight: 32,
     color: Colors.text,
     fontFamily: 'System',
   },
@@ -43,6 +43,6 @@ export const Typography: { [key: string]: TextStyle } = {
   },
   caption: {
     fontSize: 14,
-    color: Colors.textSecondary, // Matching the description in image
+    color: Colors.textSecondary,
   },
 };
