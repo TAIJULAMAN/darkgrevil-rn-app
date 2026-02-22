@@ -23,15 +23,18 @@ export default function WatchScreen() {
         player.muted = isMuted;
     });
 
+    const MAX_DURATION = 30;
+
     useEffect(() => {
         player.play();
     }, [player]);
 
     useEffect(() => {
         const interval = setInterval(() => {
-            if (player.duration > 0) {
-                setProgress(player.currentTime / player.duration);
+            if (player.currentTime >= MAX_DURATION) {
+                player.currentTime = 0;
             }
+            setProgress(Math.min(player.currentTime / MAX_DURATION, 1));
         }, 100);
         return () => clearInterval(interval);
     }, [player]);
