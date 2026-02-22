@@ -5,7 +5,7 @@ import { Colors, Spacing, Typography } from '../constants/Theme';
 
 interface CharacterCardProps {
     name: string;
-    image: string;
+    image: any;
     isSelected: boolean;
     onPress: () => void;
 }
@@ -18,10 +18,13 @@ export default function CharacterCard({ name, image, isSelected, onPress }: Char
             activeOpacity={0.8}
         >
             <View style={styles.imageContainer}>
-                <Image source={{ uri: image }} style={styles.image} />
+                <Image
+                    source={image}
+                    style={styles.image}
+                />
                 {isSelected && (
                     <View style={styles.checkIcon}>
-                        <Check color={Colors.text} size={14} />
+                        <Check color="#FFF" size={14} />
                     </View>
                 )}
             </View>
@@ -32,53 +35,54 @@ export default function CharacterCard({ name, image, isSelected, onPress }: Char
 
 const styles = StyleSheet.create({
     container: {
-        width: '45%',
+        width: '48%',
         backgroundColor: 'rgba(255,255,255,0.05)',
-        borderRadius: 80, // Circular feel for the card too if needed, but the image is circular
-        padding: Spacing.md,
+        borderRadius: 40,
+        padding: Spacing.lg,
         alignItems: 'center',
         marginBottom: Spacing.md,
         borderWidth: 1,
-        borderColor: 'transparent',
+        borderColor: 'rgba(255,255,255,0.05)',
     },
     selectedContainer: {
-        backgroundColor: 'rgba(168, 85, 247, 0.15)',
-        borderColor: Colors.primary,
+        backgroundColor: 'rgba(57, 45, 75, 0.8)', // Dark purple background for selection
+        borderColor: '#A855F7',
     },
     imageContainer: {
         width: 80,
         height: 80,
         borderRadius: 40,
-        overflow: 'hidden',
         marginBottom: Spacing.sm,
         position: 'relative',
-        borderWidth: 2,
-        borderColor: Colors.surfaceLight,
     },
     image: {
         width: '100%',
         height: '100%',
+        borderRadius: 40,
     },
     checkIcon: {
         position: 'absolute',
-        top: -2,
-        right: -2,
-        backgroundColor: Colors.primary,
-        borderRadius: 10,
-        width: 20,
-        height: 20,
+        top: 0,
+        right: -5,
+        backgroundColor: '#8B5CF6', // Brighter purple for the check circle
+        borderRadius: 12,
+        width: 24,
+        height: 24,
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 2,
-        borderColor: Colors.background,
+        borderColor: '#1A1A1A', // Dark border to separate from background
+        zIndex: 10,
     },
     name: {
         color: Colors.textSecondary,
-        fontSize: 14,
+        fontSize: 16,
+        fontWeight: '500',
         textAlign: 'center',
+        marginTop: Spacing.xs,
     },
     selectedName: {
-        color: Colors.text,
-        fontWeight: '600',
+        color: '#FFF',
+        fontWeight: 'bold',
     },
 });

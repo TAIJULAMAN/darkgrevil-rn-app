@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, ScrollView, Animated } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, ScrollView, Animated, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ChevronLeft, Circle, CheckCircle2 } from 'lucide-react-native';
 import { Colors, Spacing, Typography } from '../constants/Theme';
@@ -8,9 +8,10 @@ import LeaderboardItem from '../components/LeaderboardItem';
 import { useRouter } from 'expo-router';
 import { BlurView } from 'expo-blur';
 
+
 export default function ResultsScreen() {
     const [selectedAdventure, setSelectedAdventure] = useState<string | null>(null);
-    const [showPopup, setShowPopup] = useState(true);
+    const [showPopup, setShowPopup] = useState(false);
     const router = useRouter();
     const fadeAnim = useState(new Animated.Value(0))[0];
 
@@ -32,6 +33,11 @@ export default function ResultsScreen() {
         }).start(() => setShowPopup(false));
     };
 
+    const handleAdventureSelect = (id: string) => {
+        setSelectedAdventure(id);
+        setShowPopup(true);
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -45,7 +51,7 @@ export default function ResultsScreen() {
                     </View>
                 </View>
 
-                <View style={styles.section}>
+                <View style={styles.leaderboardSection}>
                     {CHARACTERS.slice(0, 5).map((item, index) => (
                         <LeaderboardItem
                             key={item.id}
@@ -72,7 +78,7 @@ export default function ResultsScreen() {
                             <TouchableOpacity
                                 key={item.id}
                                 style={[styles.adventureItem, selectedAdventure === item.id && styles.selectedAdventure]}
-                                onPress={() => setSelectedAdventure(item.id)}
+                                onPress={() => handleAdventureSelect(item.id)}
                             >
                                 {selectedAdventure === item.id ? (
                                     <CheckCircle2 color={Colors.primary} size={24} />
@@ -82,11 +88,6 @@ export default function ResultsScreen() {
                                 <Text style={[styles.adventureText, selectedAdventure === item.id && styles.selectedAdventureText]}>
                                     {item.title}
                                 </Text>
-                                {selectedAdventure === item.id && (
-                                    <View style={styles.checkedCircle}>
-                                        <CheckCircle2 color={Colors.primary} size={24} />
-                                    </View>
-                                )}
                             </TouchableOpacity>
                         ))}
                     </View>
@@ -118,7 +119,6 @@ export default function ResultsScreen() {
     );
 }
 
-import { Pressable } from 'react-native';
 
 const styles = StyleSheet.create({
     container: {
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
         width: 44,
         height: 44,
         borderRadius: 22,
-        backgroundColor: Colors.surface,
+        backgroundColor: 'rgba(255, 255, 255, 0.05)',
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: Spacing.md,
@@ -142,8 +142,8 @@ const styles = StyleSheet.create({
     headerTextContainer: {
         flex: 1,
     },
-    section: {
-        paddingHorizontal: Spacing.lg,
+    leaderboardSection: {
+        paddingHorizontal: Spacing.md,
     },
     dividerContainer: {
         flexDirection: 'row',

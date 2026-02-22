@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
         marginTop: Spacing.lg,
     },
     resultsLinkText: {
-        color: '#FFF', // Matching the white text in the image
+        color: Colors.primary,
         marginLeft: Spacing.sm,
         fontSize: 16,
         fontWeight: '500',

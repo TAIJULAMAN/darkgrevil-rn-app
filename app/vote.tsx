@@ -1,40 +1,37 @@
-import React, { useState, useRef, useMemo, useCallback } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, Modal, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ChevronLeft } from 'lucide-react-native';
 import { Colors, Spacing, Typography } from '../constants/Theme';
-import { CHARACTERS } from '../constants/MockData';
 import CharacterCard from '../components/CharacterCard';
 import { useRouter } from 'expo-router';
-import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+
+const CHARACTERS = [
+    { id: '1', name: 'Ertugrul Bey', image: require('../assets/ertugrul.png'), votes: '24.5k' },
+    { id: '2', name: 'Halime Hatun', image: require('../assets/halima.png'), votes: '18.5k' },
+    { id: '3', name: 'Hayme Ana', image: require('../assets/hyma.png'), votes: '15.5k' },
+    { id: '4', name: 'Turgut Alp', image: require('../assets/turgut.png'), votes: '12.5k' },
+    { id: '5', name: 'Bamsi Beyrek', image: require('../assets/bamsi.png'), votes: '9.5k' },
+    { id: '6', name: 'Abdurrahman Alp', image: require('../assets/abdur.png'), votes: '8.5k' },
+    { id: '7', name: 'Ertugrul Bey', image: require('../assets/ertugrul.png'), votes: '24.5k' },
+    { id: '8', name: 'Halime Hatun', image: require('../assets/halima.png'), votes: '18.5k' },
+    { id: '9', name: 'Hayme Ana', image: require('../assets/hyma.png'), votes: '15.5k' },
+    { id: '10', name: 'Turgut Alp', image: require('../assets/turgut.png'), votes: '12.5k' },
+];
 
 export default function VoteScreen() {
-    const [selectedId, setSelectedId] = useState<string | null>(null);
+    const [selectedId, setSelectedId] = useState<string | null>('1');
+    const [isSheetVisible, setIsSheetVisible] = useState(false);
     const router = useRouter();
-
-    // Bottom Sheet Ref
-    const bottomSheetRef = useRef<BottomSheet>(null);
-    const snapPoints = useMemo(() => ['35%'], []);
 
     const handleSelect = (id: string) => {
         setSelectedId(id);
-        bottomSheetRef.current?.expand();
+        setIsSheetVisible(true);
     };
 
     const selectedCharacter = CHARACTERS.find(c => c.id === selectedId);
 
-    // Render backdrop
-    const renderBackdrop = useCallback(
-        (props: any) => (
-            <BottomSheetBackdrop
-                {...props}
-                disappearsAt={-1}
-                appearsAt={0}
-                opacity={0.5}
-            />
-        ),
-        []
-    );
+    const closeSheet = () => setIsSheetVisible(false);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -65,20 +62,29 @@ export default function VoteScreen() {
                 showsVerticalScrollIndicator={false}
             />
 
-            <BottomSheet
-                ref={bottomSheetRef}
-                index={-1}
-                snapPoints={snapPoints}
-                enablePanDownToClose
-                backdropComponent={renderBackdrop}
-                backgroundStyle={styles.bottomSheetBackground}
-                handleIndicatorStyle={{ backgroundColor: Colors.textMuted }}
+            {/* Voting Confirmation Sheet (Custom Modal for Web/Native) */}
+            <Modal
+                visible={isSheetVisible}
+                transparent={true}
+                animationType="slide"
+                onRequestClose={closeSheet}
             >
-                <BottomSheetView style={styles.contentContainer}>
+                <TouchableOpacity
+                    style={styles.modalBackdrop}
+                    activeOpacity={1}
+                    onPress={closeSheet}
+                >
+                    <View style={styles.modalOverlay} />
+                </TouchableOpacity>
+
+                <View style={styles.sheetContainer}>
                     {selectedCharacter && (
-                        <>
+                        <View style={styles.contentContainer}>
                             <View style={styles.sheetHeader}>
-                                <Image source={{ uri: selectedCharacter.image }} style={styles.sheetImage} />
+                                <Image
+                                    source={selectedCharacter.image}
+                                    style={styles.sheetImage}
+                                />
                             </View>
                             <Text style={styles.sheetTitle}>Vote for {selectedCharacter.name}</Text>
                             <Text style={styles.sheetSubtitle}>This action cannot be undone.</Text>
@@ -86,21 +92,24 @@ export default function VoteScreen() {
                             <View style={styles.buttonRow}>
                                 <TouchableOpacity
                                     style={[styles.sheetButton, styles.cancelButton]}
-                                    onPress={() => bottomSheetRef.current?.close()}
+                                    onPress={closeSheet}
                                 >
                                     <Text style={styles.cancelButtonText}>Cancel</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={[styles.sheetButton, styles.confirmButton]}
-                                    onPress={() => router.push('/results')}
+                                    onPress={() => {
+                                        closeSheet();
+                                        router.push('/results');
+                                    }}
                                 >
                                     <Text style={styles.confirmButtonText}>Confirm Vote</Text>
                                 </TouchableOpacity>
                             </View>
-                        </>
+                        </View>
                     )}
-                </BottomSheetView>
-            </BottomSheet>
+                </View>
+            </Modal>
         </SafeAreaView>
     );
 }
@@ -134,15 +143,27 @@ const styles = StyleSheet.create({
     columnWrapper: {
         justifyContent: 'space-between',
     },
-    bottomSheetBackground: {
+    modalBackdrop: {
+        flex: 1,
+    },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    sheetContainer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
         backgroundColor: '#1C1C1E',
         borderTopLeftRadius: 32,
         borderTopRightRadius: 32,
+        minHeight: '35%',
     },
     contentContainer: {
-        flex: 1,
         alignItems: 'center',
         padding: Spacing.lg,
+        paddingBottom: Platform.OS === 'ios' ? 40 : Spacing.lg,
     },
     sheetHeader: {
         marginBottom: Spacing.md,
