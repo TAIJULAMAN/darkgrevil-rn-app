@@ -21,7 +21,13 @@ export default function HomeScreen() {
         return (
             <TouchableOpacity
                 style={[styles.charCard, isSelected && styles.selectedCharCard]}
-                onPress={() => setSelectedId(item.id)}
+                onPress={() => {
+                    setSelectedId(item.id);
+                    router.push({
+                        pathname: '/watch',
+                        params: { id: item.id }
+                    });
+                }}
                 activeOpacity={0.8}
             >
                 <View style={styles.charImageContainer}>
@@ -85,7 +91,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#000000',
     },
     scrollContent: {
-        paddingBottom: 150, // Space for footer
+        paddingBottom: 150,
     },
     header: {
         flexDirection: 'row',
@@ -98,7 +104,7 @@ const styles = StyleSheet.create({
         height: 60,
         borderRadius: 30,
         borderWidth: 2,
-        borderColor: '#333',
+        borderColor: 'rgba(255, 255, 255, 0.05)',
     },
     headerText: {
         marginLeft: Spacing.md,
@@ -128,7 +134,7 @@ const styles = StyleSheet.create({
         padding: Spacing.md,
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: 'transparent',
+        borderColor: 'rgba(255, 255, 255, 0.05)',
     },
     selectedCharCard: {
         backgroundColor: 'rgba(168, 85, 247, 0.15)',
