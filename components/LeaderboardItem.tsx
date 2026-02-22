@@ -6,12 +6,15 @@ import { Colors, Spacing, Typography } from '../constants/Theme';
 interface LeaderboardItemProps {
     rank: number;
     name: string;
-    image: string;
+    image: any;
     votes: string;
 }
 
 export default function LeaderboardItem({ rank, name, image, votes }: LeaderboardItemProps) {
     const isTop = rank === 1;
+
+    // Robust image source handling
+    const imageSource = typeof image === 'string' ? { uri: image } : image;
 
     return (
         <View style={styles.container}>
@@ -20,14 +23,15 @@ export default function LeaderboardItem({ rank, name, image, votes }: Leaderboar
             </View>
             <View style={styles.imageContainer}>
                 <Image
-                    source={typeof image === 'number' ? image : { uri: image }}
+                    source={imageSource}
                     style={styles.image}
+                    resizeMode="cover"
                 />
             </View>
             <View style={styles.details}>
                 <View style={styles.nameRow}>
                     <Text style={styles.name}>{name}</Text>
-                    {isTop && <Crown color="#FBBF24" size={24} fill="#FBBF24" style={styles.crown} />}
+                    {isTop && <Crown color="#FBBF24" size={20} fill="#FBBF24" style={styles.crown} />}
                 </View>
             </View>
             <View style={styles.votesContainer}>
@@ -41,31 +45,27 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: 'rgba(30, 25, 45, 0.9)', // Deep purple/navy background
-        borderRadius: 60,
-        paddingVertical: Spacing.md,
-        paddingHorizontal: Spacing.xl,
-        marginBottom: Spacing.lg,
-        borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.05)',
+        backgroundColor: '#241B35', // Deep purple from the image
+        borderRadius: 50,
+        paddingVertical: 10,
+        paddingHorizontal: 24,
+        marginBottom: 16,
     },
     rankContainer: {
         width: 30,
-        marginRight: Spacing.md,
+        marginRight: 10,
     },
     rank: {
-        color: 'rgba(255, 255, 255, 0.3)',
-        fontSize: 22,
+        color: 'rgba(255, 255, 255, 0.4)',
+        fontSize: 18,
         fontWeight: '500',
     },
     imageContainer: {
-        width: 70,
-        height: 70,
-        borderRadius: 35,
+        width: 64,
+        height: 64,
+        borderRadius: 32,
         overflow: 'hidden',
-        marginRight: Spacing.lg,
-        borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.1)',
+        marginRight: 16,
     },
     image: {
         width: '100%',
@@ -80,18 +80,17 @@ const styles = StyleSheet.create({
     },
     name: {
         color: '#FFF',
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: '600',
     },
     crown: {
-        marginLeft: Spacing.sm,
+        marginLeft: 8,
     },
     votesContainer: {
         alignItems: 'flex-end',
     },
     votes: {
-        color: 'rgba(255, 255, 255, 0.3)',
+        color: 'rgba(255, 255, 255, 0.4)',
         fontSize: 14,
-        fontWeight: '500',
     },
 });
