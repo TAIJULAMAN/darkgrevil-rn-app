@@ -22,11 +22,14 @@ export default function HomeScreen() {
             <TouchableOpacity
                 style={[styles.charCard, isSelected && styles.selectedCharCard]}
                 onPress={() => {
-                    setSelectedId(item.id);
-                    router.push({
-                        pathname: '/watch',
-                        params: { id: item.id }
-                    });
+                    if (isSelected) {
+                        router.push({
+                            pathname: '/watch',
+                            params: { id: item.id }
+                        });
+                    } else {
+                        setSelectedId(item.id);
+                    }
                 }}
                 activeOpacity={0.8}
             >
@@ -138,7 +141,6 @@ const styles = StyleSheet.create({
     },
     selectedCharCard: {
         backgroundColor: 'rgba(168, 85, 247, 0.15)',
-        borderColor: Colors.primary,
     },
     charImageContainer: {
         width: 80,

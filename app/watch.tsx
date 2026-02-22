@@ -14,7 +14,7 @@ export default function WatchScreen() {
     const { id } = useLocalSearchParams();
     const character = CHARACTERS.find(c => c.id === id) || CHARACTERS[0];
 
-    const [isMuted, setIsMuted] = useState(false);
+    const [isMuted, setIsMuted] = useState(true);
     const [progress, setProgress] = useState(0);
 
     const player = useVideoPlayer(videoSource, (player) => {
@@ -22,6 +22,10 @@ export default function WatchScreen() {
         player.play();
         player.muted = isMuted;
     });
+
+    useEffect(() => {
+        player.play();
+    }, [player]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -42,8 +46,7 @@ export default function WatchScreen() {
             <VideoView
                 style={styles.video}
                 player={player}
-                allowsFullscreen
-                allowsPictureInPicture
+                nativeControls={false}
                 contentFit="cover"
             />
 
