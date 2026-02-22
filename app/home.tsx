@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     },
     charCard: {
         backgroundColor: 'rgba(255,255,255,0.05)',
-        borderRadius: 80,
+        borderRadius: 40,
         padding: Spacing.md,
         alignItems: 'center',
         borderWidth: 1,

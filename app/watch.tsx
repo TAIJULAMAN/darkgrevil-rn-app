@@ -1,73 +1,96 @@
-import React, { useRef } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Home, Clock } from 'lucide-react-native';
-import { useRouter } from 'expo-router';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { Colors, Spacing } from '../constants/Theme';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useVideoPlayer, VideoView } from 'expo-video';
-import { Colors, Spacing, Typography } from '../constants/Theme';
+import { ChevronLeft, Volume2, VolumeX } from 'lucide-react-native';
 
-const { width } = Dimensions.get('window');
+import { CHARACTERS } from '../constants/MockData';
+
 const videoSource = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 
-export default function WatchPage() {
+export default function WatchScreen() {
     const router = useRouter();
+    const { id } = useLocalSearchParams();
+    const character = CHARACTERS.find(c => c.id === id) || CHARACTERS[0];
+
+    const [isMuted, setIsMuted] = useState(true);
+    const [progress, setProgress] = useState(0);
+
     const player = useVideoPlayer(videoSource, (player) => {
         player.loop = true;
         player.play();
+        player.muted = isMuted;
     });
 
+    const MAX_DURATION = 30;
+
+    useEffect(() => {
+        player.play();
+    }, [player]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (player.currentTime >= MAX_DURATION) {
+                player.currentTime = 0;
+            }
+            setProgress(Math.min(player.currentTime / MAX_DURATION, 1));
+        }, 100);
+        return () => clearInterval(interval);
+    }, [player]);
+
+    const toggleMute = () => {
+        setIsMuted(!isMuted);
+        player.muted = !isMuted;
+    };
+
     return (
-        <SafeAreaView style={styles.container}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                {/* Header */}
-                <View style={styles.header}>
-                    <TouchableOpacity style={styles.homeButton} onPress={() => router.push('/')}>
-                        <Home color="#FFF" size={20} />
-                    </TouchableOpacity>
-                    <View style={styles.headerTextContainer}>
-                        <Text style={styles.headerTitle}>Watch Episode</Text>
-                        <Text style={styles.headerSubtitle}>Watch the full episode</Text>
-                    </View>
+        <View style={styles.container}>
+            <VideoView
+                style={styles.video}
+                player={player}
+                nativeControls={false}
+                contentFit="cover"
+            />
+
+            {/* Top Controls */}
+            <View style={styles.topControls}>
+                <TouchableOpacity
+                    style={styles.roundButton}
+                    onPress={() => router.back()}
+                >
+                    <ChevronLeft color="#FFF" size={24} />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.roundButton}
+                    onPress={toggleMute}
+                >
+                    {isMuted ? (
+                        <VolumeX color="#FFF" size={24} />
+                    ) : (
+                        <Volume2 color="#FFF" size={24} />
+                    )}
+                </TouchableOpacity>
+            </View>
+
+            {/* Bottom Info Overlay */}
+            <View style={styles.bottomOverlay}>
+                {/* Progress Bar */}
+                <View style={styles.progressBarTrack}>
+                    <View style={[styles.progressBarFill, { width: `${progress * 100}%` }]} />
                 </View>
 
-                {/* Video Player Area */}
-                <View style={styles.videoContainer}>
-                    <VideoView
-                        player={player}
-                        style={styles.video}
-                        allowsFullscreen
-                        allowsPictureInPicture
+                {/* Character Info */}
+                <View style={styles.charInfo}>
+                    <Image
+                        source={character.image}
+                        style={styles.avatar}
                     />
+                    <Text style={styles.charName}>{character.name}</Text>
                 </View>
-
-                {/* Content Section */}
-                <View style={styles.contentSection}>
-                    <Text style={styles.episodeTitle}>Great Episode of the Winners</Text>
-
-                    <View style={styles.badgeRow}>
-                        <View style={styles.seasonBadge}>
-                            <Text style={styles.seasonBadgeText}>SEASON FINALE</Text>
-                        </View>
-                        <View style={styles.metaInfo}>
-                            <Clock color="rgba(255,255,255,0.6)" size={16} />
-                            <Text style={styles.metaText}>20 min</Text>
-                            <Text style={styles.metaDot}>•</Text>
-                            <Text style={styles.metaText}>Episode 12</Text>
-                        </View>
-                    </View>
-
-                    <Text style={styles.description}>
-                        Witness the ultimate showdown as the final votes are cast. The winners face their biggest challenge yet in this thrilling conclusion. Alliances will be tested, and only one will rise to claim the ultimate victory.
-                    </Text>
-
-                    <TouchableOpacity>
-                        <Text style={styles.showMoreText}>Show more</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={{ height: 40 }} />
-            </ScrollView>
-        </SafeAreaView>
+            </View>
+        </View>
     );
 }
 
@@ -76,93 +99,60 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#000',
     },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 24,
-        paddingVertical: 16,
+    video: {
+        width: '100%',
+        height: '100%',
     },
-    homeButton: {
+    topControls: {
+        position: 'absolute',
+        top: 60,
+        left: Spacing.lg,
+        right: Spacing.lg,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    roundButton: {
         width: 50,
         height: 50,
         borderRadius: 25,
-        backgroundColor: '#1A1A1A',
+        backgroundColor: 'rgba(0,0,0,0.5)',
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 16,
     },
-    headerTextContainer: {
-        flex: 1,
+    bottomOverlay: {
+        position: 'absolute',
+        bottom: 50,
+        left: Spacing.lg,
+        right: Spacing.lg,
     },
-    headerTitle: {
-        color: '#FFF',
-        fontSize: 24,
-        fontWeight: 'bold',
-    },
-    headerSubtitle: {
-        color: 'rgba(255, 255, 255, 0.4)',
-        fontSize: 14,
-    },
-    videoContainer: {
-        paddingHorizontal: 16,
-        marginTop: 8,
-    },
-    video: {
-        width: '100%',
-        height: width * 0.6,
-        borderRadius: 24,
+    progressBarTrack: {
+        height: 3,
+        backgroundColor: 'rgba(255,255,255,0.2)',
+        borderRadius: 1.5,
+        marginBottom: Spacing.lg,
         overflow: 'hidden',
     },
-    contentSection: {
-        paddingHorizontal: 24,
-        marginTop: 32,
+    progressBarFill: {
+        height: '100%',
+        backgroundColor: Colors.primary,
+        borderRadius: 1.5,
     },
-    episodeTitle: {
+    charInfo: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    avatar: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        borderWidth: 2,
+        borderColor: 'rgba(255, 255, 255, 0.05)',
+        marginRight: Spacing.md,
+    },
+    charName: {
         color: '#FFF',
-        fontSize: 28,
+        fontSize: 18,
         fontWeight: 'bold',
-        marginBottom: 16,
-    },
-    badgeRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 24,
-        flexWrap: 'wrap',
-    },
-    seasonBadge: {
-        backgroundColor: '#2E1B3D',
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 20,
-        marginRight: 16,
-    },
-    seasonBadgeText: {
-        color: '#A855F7',
-        fontSize: 12,
-        fontWeight: 'bold',
-    },
-    metaInfo: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    metaText: {
-        color: 'rgba(255, 255, 255, 0.6)',
-        fontSize: 14,
-        marginLeft: 6,
-    },
-    metaDot: {
-        color: 'rgba(255, 255, 255, 0.4)',
-        marginHorizontal: 8,
-    },
-    description: {
-        color: 'rgba(255, 255, 255, 0.6)',
-        fontSize: 16,
-        lineHeight: 24,
-        marginBottom: 16,
-    },
-    showMoreText: {
-        color: '#A855F7',
-        fontSize: 16,
-        fontWeight: '500',
     },
 });

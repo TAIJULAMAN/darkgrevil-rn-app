@@ -106,7 +106,7 @@ export default function ResultsScreen() {
                             <Text style={styles.popupDescription}>
                                 You can now enjoy our games and pop quiz challenges to discover fun facts and clues.
                             </Text>
-                            <TouchableOpacity onPress={() => { setShowPopup(false); router.push('/watch'); }}>
+                            <TouchableOpacity onPress={() => { setShowPopup(false); router.push('/watchEpisode'); }}>
                                 <Text style={styles.popupFooter}>— Enjoy!</Text>
                             </TouchableOpacity>
                         </View>
