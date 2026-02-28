@@ -5,19 +5,8 @@ import { ChevronLeft } from 'lucide-react-native';
 import { Colors, Spacing, Typography } from '../constants/Theme';
 import CharacterCard from '../components/CharacterCard';
 import { useRouter } from 'expo-router';
+import { CHARACTERS } from '../constants/MockData';
 
-const CHARACTERS = [
-    { id: '1', name: 'Ertugrul Bey', image: require('../assets/ertugrul.png'), votes: '24.5k' },
-    { id: '2', name: 'Halime Hatun', image: require('../assets/halima.png'), votes: '18.5k' },
-    { id: '3', name: 'Hayme Ana', image: require('../assets/hyma.png'), votes: '15.5k' },
-    { id: '4', name: 'Turgut Alp', image: require('../assets/turgut.png'), votes: '12.5k' },
-    { id: '5', name: 'Bamsi Beyrek', image: require('../assets/bamsi.png'), votes: '9.5k' },
-    { id: '6', name: 'Abdurrahman Alp', image: require('../assets/abdur.png'), votes: '8.5k' },
-    { id: '7', name: 'Ertugrul Bey', image: require('../assets/ertugrul.png'), votes: '24.5k' },
-    { id: '8', name: 'Halime Hatun', image: require('../assets/halima.png'), votes: '18.5k' },
-    { id: '9', name: 'Hayme Ana', image: require('../assets/hyma.png'), votes: '15.5k' },
-    { id: '10', name: 'Turgut Alp', image: require('../assets/turgut.png'), votes: '12.5k' },
-];
 
 export default function VoteScreen() {
     const [selectedId, setSelectedId] = useState<string | null>('1');
