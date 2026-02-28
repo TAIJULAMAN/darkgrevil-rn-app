@@ -51,7 +51,7 @@ export default function HomeScreen() {
                         style={styles.avatar}
                     />
                     <View style={styles.headerText}>
-                        <Text style={styles.greeting}>Hey, Abdul 👋</Text>
+                        <Text style={styles.greeting}>Hello, Khaled 👋</Text>
                         <Text style={styles.subGreeting}>Ready to choose your favorite?</Text>
                     </View>
                 </View>
