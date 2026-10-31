@@ -2,6 +2,13 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Animated, Dimensions, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import Head from 'expo-router/head';
+
+export const metadata = {
+    title: 'Dark Grevil',
+    description: 'Dark Grevil - Cast your votes and decide the fate of characters',
+    author: 'Khaled Alghanim',
+};
 
 const { width } = Dimensions.get('window');
 
@@ -33,6 +40,11 @@ export default function SplashScreen() {
 
     return (
         <SafeAreaView style={styles.container}>
+            <Head>
+                <title>{metadata.title}</title>
+                <meta name="description" content={metadata.description} />
+                <meta name="author" content={metadata.author} />
+            </Head>
             <Animated.View style={[styles.content, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
                 <Image
                     source={require('../assets/logo2.png')}

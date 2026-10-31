@@ -1,48 +1,79 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BarChart2 } from 'lucide-react-native';
+import { BarChart2, Check } from 'lucide-react-native';
 import { Colors, Spacing } from '../constants/Theme';
 import { CHARACTERS } from '../constants/MockData';
 import { useRouter } from 'expo-router';
+import Head from 'expo-router/head';
+import { useVoteStatus, MAX_VOTES } from '../utils/voteStorage';
+
+export const metadata = {
+    title: 'Home',
+    description: 'Explore personalities and choose your favorite on Dark Grevil',
+    author: 'Khaled Alghanim',
+};
 
 export default function HomeScreen() {
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const router = useRouter();
+    const { votedIds, remainingVotes, hasReachedLimit } = useVoteStatus();
 
     const handleVote = () => {
         if (selectedId) {
-            router.push('/vote');
+            router.push({
+                pathname: '/vote',
+                params: { id: selectedId }
+            });
         }
     };
 
     const renderCharacter = ({ item }: { item: typeof CHARACTERS[0] }) => {
         const isSelected = selectedId === item.id;
+        const isVoted = votedIds.includes(item.id);
         return (
             <TouchableOpacity
-                style={[styles.charCard, isSelected && styles.selectedCharCard]}
+                style={[
+                    styles.charCard,
+                    isSelected && styles.selectedCharCard,
+                    isVoted && styles.votedCharCard,
+                ]}
                 onPress={() => {
-                    if (isSelected) {
-                        router.push({
-                            pathname: '/watch',
-                            params: { id: item.id }
-                        });
-                    } else {
-                        setSelectedId(item.id);
-                    }
+                    setSelectedId(item.id);
+                    router.push({
+                        pathname: '/watch',
+                        params: { id: item.id }
+                    });
                 }}
                 activeOpacity={0.8}
             >
+                {/* Checkmark in card top-right */}
+                {isVoted && (
+                    <View style={styles.cardVotedBadge}>
+                        <Check color="#9CA3AF" size={12} />
+                    </View>
+                )}
                 <View style={styles.charImageContainer}>
                     <Image source={item.image} style={styles.charImage} />
                 </View>
-                <Text style={[styles.charName, isSelected && styles.selectedCharName]}>{item.name}</Text>
+                <Text style={[styles.charName, isSelected && styles.selectedCharName, isVoted && styles.votedCharName]}>
+                    {item.name}
+                </Text>
+                {isVoted && <Text style={styles.votedTag}>Voted</Text>}
             </TouchableOpacity>
         );
     };
 
+    const isSelectedVoted = selectedId ? votedIds.includes(selectedId) : false;
+    const isVoteDisabled = !selectedId || isSelectedVoted || hasReachedLimit;
+
     return (
         <SafeAreaView style={styles.container}>
+            <Head>
+                <title>{metadata.title}</title>
+                <meta name="description" content={metadata.description} />
+                <meta name="author" content={metadata.author} />
+            </Head>
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
                 {/* Profile */}
                 <View style={styles.header}>
@@ -52,7 +83,11 @@ export default function HomeScreen() {
                     />
                     <View style={styles.headerText}>
                         <Text style={styles.greeting}>Hello, Khaled 👋</Text>
-                        <Text style={styles.subGreeting}>Ready to choose your favorite?</Text>
+                        <Text style={styles.subGreeting}>
+                            {hasReachedLimit
+                                ? `You've used all ${MAX_VOTES} votes`
+                                : `${remainingVotes} of ${MAX_VOTES} votes remaining`}
+                        </Text>
                     </View>
                 </View>
 
@@ -69,11 +104,17 @@ export default function HomeScreen() {
             {/* Footer */}
             <View style={styles.footer}>
                 <TouchableOpacity
-                    style={[styles.voteButton, !selectedId && styles.disabledVoteButton]}
+                    style={[styles.voteButton, isVoteDisabled && styles.disabledVoteButton]}
                     onPress={handleVote}
-                    disabled={!selectedId}
+                    disabled={isVoteDisabled}
                 >
-                    <Text style={styles.voteButtonText}>Vote Now</Text>
+                    <Text style={[styles.voteButtonText, isVoteDisabled && styles.disabledVoteButtonText]}>
+                        {isSelectedVoted
+                            ? 'Already Voted'
+                            : hasReachedLimit
+                            ? 'All Votes Cast'
+                            : 'Vote Now'}
+                    </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -138,9 +179,27 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1,
         borderColor: 'rgba(255, 255, 255, 0.05)',
+        position: 'relative',
     },
     selectedCharCard: {
         backgroundColor: 'rgba(168, 85, 247, 0.15)',
+    },
+    votedCharCard: {
+        opacity: 0.65,
+    },
+    cardVotedBadge: {
+        position: 'absolute',
+        top: 14,
+        right: 14,
+        width: 22,
+        height: 22,
+        borderRadius: 11,
+        backgroundColor: '#374151',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.15)',
+        zIndex: 2,
     },
     charImageContainer: {
         width: 80,
@@ -161,6 +220,15 @@ const styles = StyleSheet.create({
     selectedCharName: {
         color: '#FFF',
         fontWeight: 'bold',
+    },
+    votedCharName: {
+        color: '#9CA3AF',
+    },
+    votedTag: {
+        color: '#9CA3AF',
+        fontSize: 11,
+        fontWeight: '600',
+        marginTop: 2,
     },
     footer: {
         position: 'absolute',
@@ -186,13 +254,17 @@ const styles = StyleSheet.create({
         elevation: 10,
     },
     disabledVoteButton: {
-        backgroundColor: '#333',
+        backgroundColor: '#374151',
         shadowOpacity: 0,
+        elevation: 0,
     },
     voteButtonText: {
         color: '#FFF',
         fontSize: 18,
         fontWeight: 'bold',
+    },
+    disabledVoteButtonText: {
+        color: '#9CA3AF',
     },
     resultsLink: {
         flexDirection: 'row',

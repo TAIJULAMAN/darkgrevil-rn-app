@@ -3,26 +3,28 @@
     "name": "darkgrevil",
     "slug": "darkgrevil",
     "version": "1.0.0",
+    "author": "Khaled Alghanim",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#000000"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.blackboys.darkgrevil"
+      "package": "com.blackboys.darkgrevil",
+      "backgroundColor": "#000000"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -35,6 +37,7 @@
       "eas": {
         "projectId": "708e864b-b149-4b97-8543-cd371784aea2"
       }
-    }
+    },
+    "backgroundColor": "#000000"
   }
 }

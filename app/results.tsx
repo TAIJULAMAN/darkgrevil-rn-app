@@ -15,6 +15,13 @@ import { Colors, Spacing } from "../constants/Theme";
 import { CHARACTERS, ADVENTURES } from "../constants/MockData";
 import LeaderboardItem from "../components/LeaderboardItem";
 import { useRouter } from "expo-router";
+import Head from "expo-router/head";
+
+export const metadata = {
+  title: "Live Results | Dark Grevil",
+  description: "View live leaderboard results and vote for the next adventure on Dark Grevil",
+  author: "Khaled Alghanim",
+};
 
 export default function ResultsScreen() {
   const [selectedAdventure, setSelectedAdventure] = useState<string | null>(
@@ -49,6 +56,11 @@ export default function ResultsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Head>
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
+        <meta name="author" content={metadata.author} />
+      </Head>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
@@ -56,7 +68,7 @@ export default function ResultsScreen() {
         <View style={styles.header}>
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => router.push("/")}
+            onPress={() => router.replace("/home")}
           >
             <ChevronLeft color="rgba(255,255,255,0.4)" size={24} />
           </TouchableOpacity>

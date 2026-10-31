@@ -7,6 +7,7 @@ interface CharacterCardProps {
   name: string;
   image: any;
   isSelected: boolean;
+  isVoted?: boolean;
   onPress: () => void;
 }
 
@@ -14,25 +15,37 @@ export default function CharacterCard({
   name,
   image,
   isSelected,
+  isVoted = false,
   onPress,
 }: CharacterCardProps) {
   return (
     <TouchableOpacity
-      style={[styles.container, isSelected && styles.selectedContainer]}
+      style={[
+        styles.container,
+        isSelected && styles.selectedContainer,
+        isVoted && styles.votedContainer,
+      ]}
       onPress={onPress}
-      activeOpacity={0.8}
+      activeOpacity={isVoted ? 0.9 : 0.8}
     >
+      {/* Checkmark in card top-right */}
+      {isVoted ? (
+        <View style={[styles.cardCheckIcon, styles.votedCheckIcon]}>
+          <Check color="#9CA3AF" size={14} />
+        </View>
+      ) : isSelected ? (
+        <View style={styles.cardCheckIcon}>
+          <Check color="#FFF" size={14} />
+        </View>
+      ) : null}
+
       <View style={styles.imageContainer}>
         <Image source={image} style={styles.image} />
-        {isSelected && (
-          <View style={styles.checkIcon}>
-            <Check color="#FFF" size={14} />
-          </View>
-        )}
       </View>
-      <Text style={[styles.name, isSelected && styles.selectedName]}>
+      <Text style={[styles.name, isSelected && styles.selectedName, isVoted && styles.votedName]}>
         {name}
       </Text>
+      {isVoted && <Text style={styles.votedLabel}>Voted</Text>}
     </TouchableOpacity>
   );
 }
@@ -47,46 +60,61 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.05)",
+    position: "relative",
   },
   selectedContainer: {
-    backgroundColor: "rgba(57, 45, 75, 0.8)",
-    borderColor: "#A855F7",
+    backgroundColor: "rgba(124, 58, 237, 0.15)",
+    borderColor: Colors.primary,
+  },
+  votedContainer: {
+    opacity: 0.65,
+    borderColor: "rgba(255,255,255,0.1)",
   },
   imageContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    marginBottom: Spacing.sm,
-    position: "relative",
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: Spacing.md,
   },
   image: {
     width: "100%",
     height: "100%",
-    borderRadius: 40,
-  },
-  checkIcon: {
-    position: "absolute",
-    top: 0,
-    right: -5,
-    backgroundColor: "#8B5CF6",
-    borderRadius: 12,
-    width: 24,
-    height: 24,
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 2,
-    borderColor: "#1A1A1A",
-    zIndex: 10,
+    borderRadius: 50,
   },
   name: {
-    color: Colors.textSecondary,
+    color: Colors.text,
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "bold",
     textAlign: "center",
-    marginTop: Spacing.xs,
   },
   selectedName: {
     color: "#FFF",
-    fontWeight: "bold",
+  },
+  votedName: {
+    color: "#9CA3AF",
+  },
+  votedLabel: {
+    color: "#9CA3AF",
+    fontSize: 12,
+    fontWeight: "600",
+    marginTop: 4,
+  },
+  cardCheckIcon: {
+    position: "absolute",
+    top: 14,
+    right: 14,
+    backgroundColor: Colors.primary,
+    borderRadius: 13,
+    width: 26,
+    height: 26,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1.5,
+    borderColor: Colors.background,
+    zIndex: 2,
+  },
+  votedCheckIcon: {
+    backgroundColor: "#374151",
+    borderColor: "#1F2937",
   },
 });

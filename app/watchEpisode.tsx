@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,14 +10,21 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Home, Clock } from "lucide-react-native";
 import { useRouter } from "expo-router";
+import Head from "expo-router/head";
 import { useVideoPlayer, VideoView } from "expo-video";
 
+export const metadata = {
+  title: "Watch Episode",
+  description: "Watch the full episode and final showdown on Dark Grevil",
+  author: "Khaled Alghanim",
+};
+
 const { width } = Dimensions.get("window");
-const videoSource =
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+const videoSource = require("../assets/video/lastOne.mp4");
 
 export default function WatchEpisodePage() {
   const router = useRouter();
+  const [isExpanded, setIsExpanded] = useState(false);
   const player = useVideoPlayer(videoSource, (player) => {
     player.loop = true;
     player.play();
@@ -25,6 +32,11 @@ export default function WatchEpisodePage() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Head>
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
+        <meta name="author" content={metadata.author} />
+      </Head>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
@@ -73,8 +85,20 @@ export default function WatchEpisodePage() {
             claim the ultimate victory.
           </Text>
 
-          <TouchableOpacity>
-            <Text style={styles.showMoreText}>Show more</Text>
+          {isExpanded && (
+            <Text style={styles.extraDescription}>
+              ei app ta bangladesh theke banano hoyeche abong eta dr. Khaled
+              Alghanim banaise.
+            </Text>
+          )}
+
+          <TouchableOpacity
+            onPress={() => setIsExpanded(!isExpanded)}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.showMoreText}>
+              {isExpanded ? "Show less" : "Show more"}
+            </Text>
           </TouchableOpacity>
         </View>
 
@@ -170,6 +194,12 @@ const styles = StyleSheet.create({
   description: {
     color: "rgba(255, 255, 255, 0.6)",
     fontSize: 16,
+    lineHeight: 24,
+    marginBottom: 16,
+  },
+  extraDescription: {
+    color: "rgba(255, 255, 255, 0.85)",
+    fontSize: 15,
     lineHeight: 24,
     marginBottom: 16,
   },
