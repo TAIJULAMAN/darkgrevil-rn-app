@@ -2,43 +2,41 @@
 
 > An interactive personality voting and multimedia mobile experience built with **React Native**, **Expo Router**, and **Expo Video**.
 
-**Author:** Dr. Khaled Alghanim  
-**Platform:** Android, iOS, Web  
-**Theme:** Dark Neon / Cyberpunk Aesthetic (`#000000` with `#7C3AED` Violet Accents)
+**Author:** Dr. Khaled Alghanim
 
 ---
 
-## 📖 Overview
+## Overview
 
 **Dark Grevil** is a mobile application where users can discover candidates and personalities, watch short candidate video reels, cast their votes with local persistent quota tracking (up to 5 votes per user), inspect real-time leaderboard standings, participate in future adventure storyline polls, and watch the full final episode.
 
 ---
 
-## ✨ Features
+## Features
 
-- **🎬 Native Video Reels & Episode Playback:**
+- **Native Video Reels & Episode Playback:**
   - High-performance native video streaming powered by [`expo-video`](https://docs.expo.dev/versions/latest/sdk/video/).
   - Vertical short-form personality reels with audio normalization, custom replay controls, progress indicators, and mute/unmute toggles.
   - Dedicated full-length episode player with synopsis expansion.
 
-- **🗳️ Persistent Local Voting System (5-Vote Quota):**
+- **Persistent Local Voting System (5-Vote Quota):**
   - Offline-first vote persistence backed by `@react-native-async-storage/async-storage`.
   - Maximum **5 votes** total per device.
   - Real-time reactive updates across all mounted screens via event listeners in [`utils/voteStorage.ts`](./utils/voteStorage.ts).
   - Voted candidates receive grayed-out badges and disabled buttons to prevent duplicate votes.
 
-- **🏆 Live Leaderboard & Adventure Polls:**
+- **Live Leaderboard & Adventure Polls:**
   - Dynamic standings ranking candidates by vote volume.
   - Interactive "Next Adventure" user poll determining the setting for upcoming episodes.
 
-- **🎨 Modern Dark Theme UI:**
+- **Modern Dark Theme UI:**
   - Immersive pure black background (`#000000`) optimized for OLED displays.
   - Smooth spring and fade animations using React Native's `Animated` API.
   - Sleek top-right card status indicators and glassmorphic card containers.
 
 ---
 
-## 📱 Screen Directory & Navigation Flow
+## Screen Directory & Navigation Flow
 
 ```mermaid
 flowchart TD
@@ -75,61 +73,7 @@ flowchart TD
 
 ---
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-Ensure you have the following installed:
-
-- [Node.js](https://nodejs.org/) (v18 or higher recommended)
-- [Android Studio](https://developer.android.com/studio) with Android SDK and an AVD emulator (or a physical Android device with USB debugging enabled)
-- Git
-
-### Installation
-
-1. **Clone the repository:**
-
-   ```bash
-   git clone <repository-url>
-   cd darkgrevil-rn-app
-   ```
-
-2. **Install project dependencies:**
-
-   ```bash
-   npm install
-   ```
-
-3. **Start the Metro development server:**
-   ```bash
-   npx expo start
-   ```
-
-### Running on Android
-
-To run on an Android emulator or connected device with native modules compiled:
-
-```bash
-npx expo run:android
-```
-
-Or start the Metro bundler directly:
-
-```bash
-npx expo start -c
-```
-
-Then press `a` in the terminal to launch the Android app.
-
-### Running on Web
-
-```bash
-npx expo start --web
-```
-
----
-
-## 📂 Project Architecture
+## Project Architecture
 
 ```
 darkgrevil-rn-app/
@@ -159,7 +103,7 @@ darkgrevil-rn-app/
 
 ---
 
-## 🔒 Voting Rules & Business Logic
+## Voting Rules & Business Logic
 
 1. **Total Vote Allowance:** Each user/device is allocated a maximum of **5 votes** total.
 2. **Single Vote per Personality:** Once a character receives a vote, their card is marked as `Voted` and subsequent votes for that personality are disabled.
@@ -171,12 +115,12 @@ darkgrevil-rn-app/
 
 ---
 
-## 👤 Author
+## Author
 
 Developed by **Dr. Khaled Alghanim**
 
 ---
 
-## 📄 License
+## License
 
 This project is private and proprietary. All rights reserved.
