@@ -8,7 +8,7 @@
 
 ## Overview
 
-**Dark Grevil** is a mobile application where users can discover candidates and personalities, watch short candidate video reels, cast their votes with local persistent quota tracking (up to 5 votes per user), inspect real-time leaderboard standings, participate in future adventure storyline polls, and watch the full final episode.
+**Dark Grevil** is a mobile application mvp where users can discover candidates and personalities, watch short candidate video reels, cast their votes with local persistent quota tracking (up to 5 votes per user), inspect real-time leaderboard standings, participate in future adventure storyline polls, and watch the full final episode.
 
 ---
 
